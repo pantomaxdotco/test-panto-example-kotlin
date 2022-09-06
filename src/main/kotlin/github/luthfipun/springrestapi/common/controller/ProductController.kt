@@ -1,10 +1,7 @@
 package github.luthfipun.springrestapi.common.controller
 
 import github.luthfipun.springrestapi.common.services.ProductService
-import github.luthfipun.springrestapi.domain.entity.Product
-import github.luthfipun.springrestapi.domain.model.DataState
-import github.luthfipun.springrestapi.domain.model.InsertUpdateProductRequest
-import github.luthfipun.springrestapi.domain.model.ProductResponse
+import github.luthfipun.springrestapi.domain.model.*
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -17,8 +14,12 @@ class ProductController(
         value = ["product"],
         produces = ["application/json"]
     )
-    fun getProducts(): DataState<List<Product>>{
-        return productService.getProducts()
+    fun getProducts(
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "limit", defaultValue = "5") limit: Int,
+    ): DataState<PagingProductResponse>{
+        val pagingRequest = PagingRequest(page = page, limit = limit)
+        return productService.getProducts(pagingRequest = pagingRequest)
     }
 
     @PostMapping(

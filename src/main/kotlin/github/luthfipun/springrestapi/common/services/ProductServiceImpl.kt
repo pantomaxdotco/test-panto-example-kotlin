@@ -2,21 +2,30 @@ package github.luthfipun.springrestapi.common.services
 
 import github.luthfipun.springrestapi.common.error.NotFoundException
 import github.luthfipun.springrestapi.common.repository.ProductRepository
-import github.luthfipun.springrestapi.domain.entity.Product
-import github.luthfipun.springrestapi.domain.model.DataState
-import github.luthfipun.springrestapi.domain.model.InsertUpdateProductRequest
-import github.luthfipun.springrestapi.domain.model.ProductResponse
+import github.luthfipun.springrestapi.domain.model.*
 import github.luthfipun.springrestapi.domain.validation.ValidationUtil
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.stream.Collectors
 
 @Service
 class ProductServiceImpl(
     val productRepository: ProductRepository,
     val validationUtil: ValidationUtil
 ) : ProductService {
-    override fun getProducts(): DataState<List<Product>> {
-        return DataState(data = productRepository.findAll())
+
+    override fun getProducts(pagingRequest: PagingRequest): DataState<PagingProductResponse> {
+        val products = productRepository.findAll(
+            PageRequest.of(pagingRequest.page, pagingRequest.limit)
+        )
+        val pagingData = PagingProductResponse(
+            total = products.totalPages,
+            current_page = products.number,
+            prev_page = if(products.hasPrevious()) products.previousPageable().pageNumber else null,
+            content = products.get().collect(Collectors.toList())?.map { it.toProductResponse() } ?: listOf()
+        )
+        return DataState(data = pagingData)
     }
 
     override fun insertProduct(insertUpdateProductRequest: InsertUpdateProductRequest): DataState<Nothing> {

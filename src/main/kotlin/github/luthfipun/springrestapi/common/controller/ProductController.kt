@@ -4,11 +4,8 @@ import github.luthfipun.springrestapi.common.services.ProductService
 import github.luthfipun.springrestapi.domain.entity.Product
 import github.luthfipun.springrestapi.domain.model.DataState
 import github.luthfipun.springrestapi.domain.model.InsertProductRequest
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import github.luthfipun.springrestapi.domain.model.ProductResponse
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/v1/")
@@ -20,7 +17,7 @@ class ProductController(
         value = ["product"],
         produces = ["application/json"]
     )
-    fun getProduct(): DataState<List<Product>>{
+    fun getProducts(): DataState<List<Product>>{
         return productService.getProducts()
     }
 
@@ -31,5 +28,13 @@ class ProductController(
     )
     fun insertProduct(@RequestBody insertProductRequest: InsertProductRequest): DataState<Nothing> {
         return productService.insertProduct(insertProductRequest = insertProductRequest)
+    }
+
+    @GetMapping(
+        value = ["product/{id}"],
+        produces = ["application/json"]
+    )
+    fun getProduct(@PathVariable("id") id: Long): DataState<ProductResponse> {
+        return productService.getProduct(id = id)
     }
 }

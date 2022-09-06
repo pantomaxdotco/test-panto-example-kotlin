@@ -1,9 +1,11 @@
 package github.luthfipun.springrestapi.common.services
 
+import github.luthfipun.springrestapi.common.error.NotFoundException
 import github.luthfipun.springrestapi.common.repository.ProductRepository
 import github.luthfipun.springrestapi.domain.entity.Product
 import github.luthfipun.springrestapi.domain.model.DataState
 import github.luthfipun.springrestapi.domain.model.InsertProductRequest
+import github.luthfipun.springrestapi.domain.model.ProductResponse
 import github.luthfipun.springrestapi.domain.validation.ValidationUtil
 import org.springframework.stereotype.Service
 
@@ -20,5 +22,13 @@ class ProductServiceImpl(
         validationUtil.validate(insertProductRequest)
         productRepository.save(insertProductRequest.toProduct())
         return DataState(data = null)
+    }
+
+    override fun getProduct(id: Long): DataState<ProductResponse> {
+        val product = productRepository.findById(id)
+        if (product.isEmpty){
+            throw NotFoundException()
+        }
+        return DataState(data = product.get().toProductResponse())
     }
 }

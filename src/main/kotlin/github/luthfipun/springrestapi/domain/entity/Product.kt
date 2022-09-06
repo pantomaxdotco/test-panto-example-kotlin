@@ -12,19 +12,19 @@ data class Product(
     val id: Long = 0,
 
     @Column(name = "name")
-    val name: String,
+    var name: String,
 
     @Column(name = "price")
-    val price: Long,
+    var price: Long,
 
     @Column(name = "qty")
-    val qty: Int,
+    var qty: Int,
 
     @Column(name = "created_at")
     val createdAt: Date,
 
     @Column(name = "updated_at")
-    val updatedAt: Date?
+    var updatedAt: Date?
 ){
     fun toProductResponse(): ProductResponse {
         return ProductResponse(

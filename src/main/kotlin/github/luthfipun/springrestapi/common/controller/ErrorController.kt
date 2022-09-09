@@ -1,6 +1,7 @@
 package github.luthfipun.springrestapi.common.controller
 
 import github.luthfipun.springrestapi.common.error.NotFoundException
+import github.luthfipun.springrestapi.common.error.UnAuthorizeException
 import github.luthfipun.springrestapi.domain.model.DataState
 import org.springframework.http.HttpStatus
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -52,6 +53,17 @@ class ErrorController {
             status = false,
             code = HttpStatus.METHOD_NOT_ALLOWED.value(),
             message = httpRequestMethodNotSupportedException.message.orEmpty(),
+            data = null
+        )
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = [UnAuthorizeException::class])
+    fun unAuthorizeHandler(unAuthorizeException: UnAuthorizeException): DataState<Nothing> {
+        return DataState(
+            status = false,
+            code = HttpStatus.UNAUTHORIZED.value(),
+            message = HttpStatus.UNAUTHORIZED.reasonPhrase,
             data = null
         )
     }

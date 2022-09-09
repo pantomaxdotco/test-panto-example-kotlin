@@ -10,6 +10,21 @@ Learning kotlin spring boot application restful API with basic CRUD and authenti
 ## API Spec
 
 ---
+### Request Authentication
+All the request restful API must have headers authentication
+#### Request :
+
+* Header :
+  * X-Auth-API : secret key
+
+> Use default secret api key bellow for authenticated. This key is md5 encryption from secret value, you can find on **application.properties**
+
+Default Api Key :
+```shell 
+5ebe2294ecd0e0f08eab7690d2a6ee69
+```
+
+---
 ### Get Product by Id
 #### Request :
   * Method : GET

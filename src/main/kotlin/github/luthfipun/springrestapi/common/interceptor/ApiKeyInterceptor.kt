@@ -1,4 +1,4 @@
-package github.luthfipun.springrestapi.common.config
+package github.luthfipun.springrestapi.common.interceptor
 
 import github.luthfipun.springrestapi.common.error.UnAuthorizeException
 import github.luthfipun.springrestapi.common.repository.ApiKeyRepository

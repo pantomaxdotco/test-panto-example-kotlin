@@ -1,9 +1,21 @@
 version: "3.9"
 
 services:
+  spring-rest-api:
+    container_name: spring-rest-api
+    image: spring-rest-api:0.0.1
+    ports:
+      - 8080:8080
+    environment:
+      DATABASE_URL: jdbc:mysql://spring-rest-api-mysql:3306/spring-rest-api
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      APP_SECRET_KEY: secret
+    depends_on:
+      - spring-rest-api-mysql
   spring-rest-api-mysql:
     container_name: "spring-rest-api-mysql"
-    image: mysql
+    image: mysql:latest
     ports:
       - 3306:3306
     environment:

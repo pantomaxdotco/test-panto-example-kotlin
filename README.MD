@@ -7,6 +7,13 @@ Learning kotlin spring boot application restful API with basic CRUD and authenti
 * Docker Compose
 * Spring Boot
 
+## Run Application with Docker Compose
+* Download and install MySQL docker images the latest version on your machines
+* And run this command :
+```shell
+docker compose -f docker-compose.yml up -d 
+```
+
 ## API Spec
 
 ---

@@ -16,8 +16,9 @@ class ProductServiceImpl(
 ) : ProductService {
 
     override fun getProducts(pagingRequest: PagingRequest): DataState<PagingProductResponse> {
-        val products = productRepository.findAll(
-            PageRequest.of(pagingRequest.page, pagingRequest.limit)
+        val products = findProducts(
+            page = pagingRequest.page,
+            limit = pagingRequest.limit
         )
         val pagingData = PagingProductResponse(
             total = products.totalPages,
@@ -43,7 +44,7 @@ class ProductServiceImpl(
     }
 
     override fun updateProduct(id: Long, insertUpdateProductRequest: InsertUpdateProductRequest): DataState<Nothing> {
-        val product = productRepository.findById(id)
+        val product = findProductById(id)
         if (product.isEmpty){
             throw NotFoundException()
         }
@@ -59,11 +60,32 @@ class ProductServiceImpl(
     }
 
     override fun deleteProduct(id: Long): DataState<Nothing> {
-        val product = productRepository.existsById(id)
-        if (!product){
-            throw NotFoundException()
+        val product = findProductById(id)
+        if (product.isEmpty){ {
+            println("Error: Product not found") 
+            return DataState(data = null)
         }
-        productRepository.deleteById(id)
+
+        product.deletedAtTimestampForSoftDeletion = Date()
+        productRepository.save(product) 
+
         return DataState(data = null)
+    }
+
+    private fun findProductById(id: Long): Product? {
+        val product = productRepository.findById(id).orElse(null)
+        return if (product != null && product.deletedAtTimestampForSoftDeletion == null) {
+            product
+        } else {
+            null
+        }
+    }
+
+    private fun findProducts(page: Int, limit: Int): List<Product> {
+        val products = productRepository.findAll(
+            PageRequest.of(page, limit)
+        )
+        println("Total Pages: ${products.totalPages}")
+        return products.get().collect(Collectors.toList())
     }
 }

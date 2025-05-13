@@ -24,7 +24,10 @@ data class Product(
     val createdAt: Date,
 
     @Column(name = "updated_at")
-    var updatedAt: Date?
+    var updatedAt: Date?,
+
+    @Column(name = "deleted_at_timestamp_for_soft_deletion")
+    var deletedAtTimestampForSoftDeletion: Date? = null
 ){
     fun toProductResponse(): ProductResponse {
         return ProductResponse(
